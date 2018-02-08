@@ -15,12 +15,14 @@
     <script>
         var camera, controls, scene, renderer;
         init();
+        render();
         function init() {
             renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(500, 500);
             document.body.appendChild(renderer.domElement);
 
             scene = new THREE.Scene();
+            scene.background = new THREE.Color( 0xcccccc );
             var center = new THREE.Vector3();
             camera = new THREE.PerspectiveCamera(45, 1, 0.01, 300);
 
@@ -30,6 +32,10 @@
             var color = new THREE.Color(0.2, 0.2, 0.2);
             var ambient = new THREE.AmbientLight(color.getHex());
             scene.add(ambient);
+
+            controls = new THREE.OrbitControls( camera, renderer.domElement );
+            controls.addEventListener( 'change', render );
+            controls.enableZoom = true;
 
             var geometry = new THREE.BoxGeometry(1, 1, 1);
             var material = new THREE.MeshPhongMaterial({
@@ -61,14 +67,15 @@
             function render() {
                 renderer.render(scene, camera);
             }
-            
+            /*
             var frameId = 0;
             function redraw() {
                 cancelAnimationFrame(frameId);
                 frameId = requestAnimationFrame(render);
             }
             redraw();
-            
+            */
+            window.addEventListener( 'resize', onWindowResize, false );
         }
         function onWindowResize() {
             camera.aspect = window.innerWidth / window.innerHeight;
